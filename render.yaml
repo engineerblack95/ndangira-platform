@@ -34,7 +34,7 @@ services:
   - type: web
     name: ndangira-client
     runtime: static
-    plan: free
+    plan: 0.5c-512mb 
     rootDir: client
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
