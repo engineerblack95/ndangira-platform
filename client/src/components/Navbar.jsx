@@ -10,6 +10,8 @@ export default function Navbar() {
     navigate("/");
   };
 
+  const isAdmin = isLoggedIn && user?.role === "admin";
+
   return (
     <nav className="navbar">
       <div className="navbar-inner">
@@ -19,16 +21,34 @@ export default function Navbar() {
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/lost">Lost Items</NavLink>
           <NavLink to="/found">Found Items</NavLink>
+
+          <span className="nav-divider" aria-hidden="true" />
+
           <NavLink to="/report-lost">Report Lost</NavLink>
           <NavLink to="/report-found">Report Found</NavLink>
+
+          {isAdmin && (
+            <>
+              <span className="nav-divider" aria-hidden="true" />
+              <NavLink to="/admin" className="nav-admin">
+                Admin
+              </NavLink>
+            </>
+          )}
         </div>
 
         <div className="nav-auth">
           {isLoggedIn ? (
             <>
-              <span className="nav-user">Hi, {user.name}</span>
-              <Link to="/dashboard" className="btn btn-outline btn-sm">Dashboard</Link>
-              <button onClick={handleLogout} className="btn btn-ghost btn-sm">Logout</button>
+              <span className="nav-user">
+                Hi, <strong>{user.name}</strong>
+              </span>
+              <Link to="/dashboard" className="btn btn-outline btn-sm">
+                Dashboard
+              </Link>
+              <button onClick={handleLogout} className="btn btn-ghost btn-sm">
+                Logout
+              </button>
             </>
           ) : (
             <>
