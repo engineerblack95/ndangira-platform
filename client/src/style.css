@@ -487,7 +487,53 @@ img { max-width: 100%; display: block; }
 }
 .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-/* ============ 16. Responsive ============ */
+/* ============ 16. Image previews & file input ============ */
+.preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+.preview-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+input[type="file"] {
+  padding: 0.5rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  background: var(--bg);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--muted);
+  transition: border-color 0.15s, background 0.15s;
+}
+input[type="file"]:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+input[type="file"]::file-selector-button {
+  padding: 0.45rem 0.9rem;
+  margin-right: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+input[type="file"]::file-selector-button:hover {
+  background: var(--primary-dark);
+}
+
+/* ============ 17. Responsive ============ */
 @media (max-width: 800px) {
   .details { grid-template-columns: 1fr; }
   .stats, .how-it-works { grid-template-columns: 1fr; }

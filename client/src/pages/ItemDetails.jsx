@@ -7,32 +7,40 @@ export default function ItemDetails() {
   const { id } = useParams();
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
-      const data = await getItemById(id);
-      setItem(data);
-      setLoading(false);
+      try {
+        const data = await getItemById(id);
+        setItem(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [id]);
 
   if (loading) return <Loader />;
 
-  if (!item) {
+  if (error || !item) {
     return (
       <div className="empty">
         <h3>Item not found</h3>
-        <p>It may have been removed or the link is wrong.</p>
+        <p>{error || "It may have been removed or the link is wrong."}</p>
         <Link to="/" className="btn btn-primary" style={{ marginTop: "1rem" }}>Back to Home</Link>
       </div>
     );
   }
 
+  const image = item.images && item.images.length > 0 ? item.images[0] : null;
+
   return (
     <div className="details">
       <div>
-        {item.images && item.images.length > 0 ? (
-          <img src={item.images[0]} alt={item.title} className="details-img" />
+        {image ? (
+          <img src={image} alt={item.title} className="details-img" />
         ) : (
           <div className="details-img-placeholder">No image available</div>
         )}
@@ -53,20 +61,20 @@ export default function ItemDetails() {
         <p>📍 {item.location}</p>
 
         <p className="label">Date {item.type === "lost" ? "lost" : "found"}</p>
-        <p>📅 {item.date}</p>
+        <p>📅 {new Date(item.date_occurred).toLocaleDateString()}</p>
 
         {item.reward ? (
           <>
             <p className="label">Reward</p>
-            <p className="reward">RWF {item.reward.toLocaleString()}</p>
+            <p className="reward">RWF {Number(item.reward).toLocaleString()}</p>
           </>
         ) : null}
 
         <div className="contact-box">
           <h3>Contact</h3>
-          <p>👤 {item.contact.name}</p>
-          <p>📞 {item.contact.phone}</p>
-          {item.contact.email ? <p>✉️ {item.contact.email}</p> : null}
+          <p>👤 {item.contact_name || "N/A"}</p>
+          <p>📞 {item.contact_phone || "N/A"}</p>
+          {item.contact_email ? <p>✉️ {item.contact_email}</p> : null}
         </div>
       </div>
     </div>

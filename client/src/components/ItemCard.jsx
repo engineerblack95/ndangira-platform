@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 
 export default function ItemCard({ item }) {
-  const detailPath = `/${item.type}/${item._id}`;
+  const detailPath = `/${item.type}/${item.id}`;
+  const image = item.images && item.images.length > 0 ? item.images[0] : null;
 
   return (
     <Link to={detailPath} style={{ textDecoration: "none", color: "inherit" }}>
       <article className="card">
-        {item.images && item.images.length > 0 ? (
-          <img src={item.images[0]} alt={item.title} className="card-img" />
+        {image ? (
+          <img src={image} alt={item.title} className="card-img" />
         ) : (
           <div className="card-img-placeholder">No image</div>
         )}
@@ -25,7 +26,7 @@ export default function ItemCard({ item }) {
 
           <div className="card-meta">
             <span>📍 {item.location}</span>
-            {item.reward ? <span className="reward">RWF {item.reward.toLocaleString()}</span> : null}
+            {item.reward ? <span className="reward">RWF {Number(item.reward).toLocaleString()}</span> : null}
           </div>
         </div>
       </article>

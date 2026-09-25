@@ -1,50 +1,55 @@
-// ⭐ Swap point: currently mocks items + real auth against the backend.
-// When you build item endpoints on the server later, replace the mock item
-// functions with fetch calls to `${API_URL}/items`.
-
-import { mockLostItems, mockFoundItems } from "../data/mockData";
-
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// ==================== ITEMS (still mock) ====================
+// ==================== ITEMS ====================
 
 export async function getItems({ type = "lost", search = "", category = "All" } = {}) {
-  await delay(200);
-  let items = type === "lost" ? [...mockLostItems] : [...mockFoundItems];
+  const params = new URLSearchParams();
+  if (type) params.set("type", type);
+  if (search) params.set("search", search);
+  if (category && category !== "All") params.set("category", category);
 
-  if (search) {
-    const q = search.toLowerCase();
-    items = items.filter(
-      (i) =>
-        i.title.toLowerCase().includes(q) ||
-        i.description.toLowerCase().includes(q) ||
-        i.location.toLowerCase().includes(q)
-    );
-  }
-  if (category && category !== "All") {
-    items = items.filter((i) => i.category === category);
-  }
-  return items;
+  const res = await fetch(`${API_URL}/items?${params.toString()}`);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "Failed to load items");
+  return data.items || [];
 }
 
 export async function getItemById(id) {
-  await delay(150);
-  const all = [...mockLostItems, ...mockFoundItems];
-  return all.find((i) => i._id === id) || null;
+  const res = await fetch(`${API_URL}/items/${id}`);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "Item not found");
+  return data.item || null;
 }
 
-export async function createItem(data) {
-  await delay(300);
-  return {
-    ...data,
-    _id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
-    status: "open",
-  };
+/**
+ * createItem supports optional file uploads.
+ * @param {Object} payload Fields: type, title, description, category, location, date_occurred, reward, contact_name, contact_phone, contact_email
+ * @param {File[]} files  Optional array of File objects from <input type="file" multiple>
+ */
+export async function createItem(payload, files = []) {
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      formData.append(key, value);
+    }
+  });
+
+  files.forEach((file) => {
+    formData.append("images", file);
+  });
+
+  const res = await fetch(`${API_URL}/items`, {
+    method: "POST",
+    body: formData, // NOTE: no Content-Type header — the browser sets multipart boundary
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "Failed to create item");
+  return data.item;
 }
 
-// ==================== AUTH (real backend) ====================
+// ==================== AUTH ====================
 
 export async function login(email, password) {
   const res = await fetch(`${API_URL}/auth/login`, {
@@ -52,10 +57,9 @@ export async function login(email, password) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
-
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "Login failed");
-  return data; // { user, token }
+  return data;
 }
 
 export async function register(name, email, password, phone = "") {
@@ -64,18 +68,16 @@ export async function register(name, email, password, phone = "") {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, password, phone }),
   });
-
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "Registration failed");
-  return data; // { user, token }
+  return data;
 }
 
 export async function getMe(token) {
   const res = await fetch(`${API_URL}/auth/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "Failed to fetch user");
-  return data; // { user }
+  return data;
 }
