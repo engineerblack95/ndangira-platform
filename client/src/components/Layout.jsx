@@ -1,0 +1,12 @@
+import Navbar from "./Navbar.jsx";
+import Footer from "./Footer.jsx";
+
+export default function Layout({ children }) {
+  return (
+    <div className="app">
+      <Navbar />
+      <main className="main-content">{children}</main>
+      <Footer />
+    </div>
+  );
+}
