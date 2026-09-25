@@ -6,7 +6,7 @@ databases:
     postgresMajorVersion: "15"
 
 services:
-  # 1. Express Backend
+  # ---------- Backend (Express) ----------
   - type: web
     name: ndangira-server
     runtime: node
@@ -26,16 +26,15 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CLIENT_URL
-        value: https://ndangira-client.onrender.com # Placeholder, you will update this after first deploy
+        value: https://ndangira-client.onrender.com
       - key: NODE_ENV
         value: production
 
-  # 2. React Frontend (Vite)
+  # ---------- Frontend (React + Vite) ----------
   - type: web
     name: ndangira-client
     runtime: static
     plan: free
-    region: frankfurt
     rootDir: client
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
@@ -45,7 +44,6 @@ services:
           type: web
           name: ndangira-server
           property: host
-          # Note: Render prefixes host with https:// automatically for the frontend build
     routes:
       - type: rewrite
         source: /*
