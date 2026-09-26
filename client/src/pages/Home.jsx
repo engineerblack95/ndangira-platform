@@ -33,45 +33,37 @@ export default function Home() {
 
   return (
     <div>
-      {/* ============ HERO ============ */}
-      <section className="hero hero-pro">
-        <span className="hero-badge">Ndangira Platform</span>
-        <h1>Lost something? Found something?</h1>
-        <p>
-          Ndangira connects people who lost items with those who found them —
-          quick, free, and community-driven.
-        </p>
-        <div className="hero-actions">
-          <Link to="/report-lost" className="btn btn-primary btn-lg">
-            Report a Lost Item
-          </Link>
-          <Link to="/report-found" className="btn btn-outline btn-lg">
-            Report a Found Item
-          </Link>
+      {/* ============ HERO (compact) ============ */}
+      <section className="hero hero-compact">
+        <div className="hero-text">
+          <span className="hero-badge">Ndangira Platform</span>
+          <h1>Lost something? Found something?</h1>
+          <p>
+            Ndangira connects people who lost items with those who found them.
+          </p>
+          <div className="hero-actions">
+            <Link to="/report-lost" className="btn btn-primary">
+              Report a Lost Item
+            </Link>
+            <Link to="/report-found" className="btn btn-outline">
+              Report a Found Item
+            </Link>
+          </div>
         </div>
 
-        <div className="hero-trust">
-          <span>📍 Rwanda</span>
-          <span>•</span>
-          <span>Free forever</span>
-          <span>•</span>
-          <span>Community powered</span>
-        </div>
-      </section>
-
-      {/* ============ STATS ============ */}
-      <section className="stats">
-        <div className="stat">
-          <div className="stat-value">{totalItems}+</div>
-          <div className="stat-label">Items Posted</div>
-        </div>
-        <div className="stat">
-          <div className="stat-value">{found.length}</div>
-          <div className="stat-label">Found Reports</div>
-        </div>
-        <div className="stat">
-          <div className="stat-value">{lost.length}</div>
-          <div className="stat-label">Lost Reports</div>
+        <div className="hero-stats-card">
+          <div className="hero-mini-stat">
+            <div className="hero-mini-value">{totalItems}+</div>
+            <div className="hero-mini-label">Items posted</div>
+          </div>
+          <div className="hero-mini-stat">
+            <div className="hero-mini-value">{lost.length}</div>
+            <div className="hero-mini-label">Lost reports</div>
+          </div>
+          <div className="hero-mini-stat">
+            <div className="hero-mini-value">{found.length}</div>
+            <div className="hero-mini-label">Found reports</div>
+          </div>
         </div>
       </section>
 
@@ -94,7 +86,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ============ RECENT ITEMS (with tab switcher) ============ */}
+      {/* ============ RECENT ITEMS ============ */}
       <div className="section-header section-header-tabs">
         <div className="home-tabs">
           <button
