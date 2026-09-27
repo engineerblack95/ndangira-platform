@@ -125,11 +125,10 @@ export async function createItem(req, res, next) {
 
     const item = result.rows[0];
 
-    // Save image URLs if any files were uploaded
+    // Save image URLs from Cloudinary
     if (req.files && req.files.length > 0) {
-      const imageUrls = req.files.map(
-        (f) => `http://localhost:5000/uploads/${f.filename}`
-      );
+      // multer-storage-cloudinary stores the full HTTPS URL in `path`
+      const imageUrls = req.files.map((f) => f.path);
 
       for (let i = 0; i < imageUrls.length; i++) {
         await query(
